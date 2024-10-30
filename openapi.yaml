@@ -1,0 +1,1050 @@
+openapi: 3.0.0
+info:
+  title: PLLAY Enterprise Solution API
+  version: 1.0.0
+  description: API documentation for PLLAY Enterprise Solution
+
+servers:
+  - url: https://api.pllay.com/v1
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+        '400':
+          description: Bad request
+
+  /auth/login:
+    post:
+      summary: Log in a user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                twoFactorToken:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+        '401':
+          description: Unauthorized
+
+  /auth/two-factor/setup:
+    post:
+      summary: Set up two-factor authentication
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Two-factor authentication setup successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  secret:
+                    type: string
+                  otpauthUrl:
+                    type: string
+
+  /auth/two-factor/verify:
+    post:
+      summary: Verify two-factor authentication
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+      responses:
+        '200':
+          description: Two-factor authentication verified successfully
+
+  /games:
+    get:
+      summary: Get list of games
+      tags:
+        - Games
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: search
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  games:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        status:
+                          type: string
+                        popularity:
+                          type: number
+                  totalPages:
+                    type: integer
+                  currentPage:
+                    type: integer
+
+    post:
+      summary: Create a new game
+      tags:
+        - Games
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - description
+                - apiEndpoint
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                apiEndpoint:
+                  type: string
+      responses:
+        '201':
+          description: Game created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  apiEndpoint:
+                    type: string
+                  status:
+                    type: string
+                  popularity:
+                    type: number
+
+  /games/{id}:
+    get:
+      summary: Get a specific game
+      tags:
+        - Games
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  apiEndpoint:
+                    type: string
+                  status:
+                    type: string
+                  popularity:
+                    type: number
+
+    put:
+      summary: Update a game
+      tags:
+        - Games
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                apiEndpoint:
+                  type: string
+                status:
+                  type: string
+      responses:
+        '200':
+          description: Game updated successfully
+
+    delete:
+      summary: Delete a game
+      tags:
+        - Games
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Game deleted successfully
+
+  /tournaments:
+    get:
+      summary: Get list of tournaments
+      tags:
+        - Tournaments
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tournaments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        startDate:
+                          type: string
+                          format: date-time
+                        endDate:
+                          type: string
+                          format: date-time
+                        status:
+                          type: string
+                        participants:
+                          type: integer
+                        prize:
+                          type: number
+                  totalPages:
+                    type: integer
+                  currentPage:
+                    type: integer
+
+    post:
+      summary: Create a new tournament
+      tags:
+        - Tournaments
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - startDate
+                - endDate
+                - maxParticipants
+                - entryFee
+                - prize
+              properties:
+                name:
+                  type: string
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+                maxParticipants:
+                  type: integer
+                entryFee:
+                  type: number
+                prize:
+                  type: number
+      responses:
+        '201':
+          description: Tournament created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  startDate:
+                    type: string
+                    format: date-time
+                  endDate:
+                    type: string
+                    format: date-time
+                  maxParticipants:
+                    type: integer
+                  entryFee:
+                    type: number
+                  prize:
+                    type: number
+                  status:
+                    type: string
+
+  /tournaments/{id}:
+    get:
+      summary: Get a specific tournament
+      tags:
+        - Tournaments
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  startDate:
+                    type: string
+                    format: date-time
+                  endDate:
+                    type: string
+                    format: date-time
+                  maxParticipants:
+                    type: integer
+                  entryFee:
+                    type: number
+                  prize:
+                    type: number
+                  status:
+                    type: string
+                  participants:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userId:
+                          type: string
+                        username:
+                          type: string
+
+    put:
+      summary: Update a tournament
+      tags:
+        - Tournaments
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+                maxParticipants:
+                  type: integer
+                entryFee:
+                  type: number
+                prize:
+                  type: number
+                status:
+                  type: string
+      responses:
+        '200':
+          description: Tournament updated successfully
+
+    delete:
+      summary: Delete a tournament
+      tags:
+        - Tournaments
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tournament deleted successfully
+
+  /tournaments/{id}/join:
+    post:
+      summary: Join a tournament
+      tags:
+        - Tournaments
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully joined the tournament
+
+  /payments/wallet:
+    get:
+      summary: Get wallet balance
+      tags:
+        - Payments
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currency:
+                    type: number
+                  tokens:
+                    type: number
+
+  /payments/deposit:
+    post:
+      summary: Make a deposit
+      tags:
+        - Payments
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - processor
+                - token
+              properties:
+                amount:
+                  type: number
+                processor:
+                  type: string
+                  enum: [stripe, paypal, cashapp]
+                token:
+                  type: string
+      responses:
+        '200':
+          description: Deposit successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /payments/withdraw:
+    post:
+      summary: Request a withdrawal
+      tags:
+        - Payments
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - method
+              properties:
+                amount:
+                  type: number
+                method:
+                  type: string
+                  enum: [bank_transfer, paypal, crypto]
+      responses:
+        '200':
+          description: Withdrawal request submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /payments/convert-to-tokens:
+    post:
+      summary: Convert currency to tokens
+      tags:
+        - Payments
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+              properties:
+                amount:
+                  type: number
+      responses:
+        '200':
+          description: Conversion successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  tokenAmount:
+                    type: number
+
+  /payments/convert-to-currency:
+    post:
+      summary: Convert tokens to currency
+      tags:
+        - Payments
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tokenAmount
+              properties:
+                tokenAmount:
+                  type: number
+      responses:
+        '200':
+          description: Conversion successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  currencyAmount:
+                    type: number
+
+  /reports:
+    get:
+      summary: Get report data
+      tags:
+        - Reports
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: startDate
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: game
+          schema:
+            type: string
+        - in: query
+          name: type
+          required: true
+          schema:
+            type: string
+            enum: [overview, userGrowth, revenue, tournaments, wagers]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userGrowth:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          format: date
+                        count:
+                          type: integer
+                  revenueByGame:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        game:
+                          type: string
+                        revenue:
+                          type: number
+                  tournamentParticipation:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tournament:
+                          type: string
+                        participants:
+                          type: integer
+                  dailyActiveUsers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          format: date
+                        count:
+                          type: integer
+                  wagerDistribution:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        amount:
+                          type: string
+                        count:
+                          type: integer
+
+  /reports/download:
+    get:
+      summary: Download report as CSV
+      tags:
+        - Reports
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: startDate
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: game
+          schema:
+            type: string
+        - in: query
+          name: type
+          required: true
+          schema:
+            type: string
+            enum: [overview, userGrowth, revenue, tournaments, wagers]
+      responses:
+        '200':
+          description: CSV file
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+
+  /admin/users:
+    get:
+      summary: Get all users (admin only)
+      tags:
+        - Admin
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: search
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+                        role:
+                          type: string
+                        status:
+                          type: string
+                  totalPages:
+                    type: integer
+                  currentPage:
+                    type: integer
+
+  /admin/financial-reports:
+    get:
+      summary: Get financial reports (admin only)
+      tags:
+        - Admin
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: startDate
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  revenue:
+                    type: number
+                  expenses:
+                    type: number
+                  profit:
+                    type: number
+                  revenueByGame:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        value:
+                          type: number
+                  revenueByMonth:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        month:
+                          type: string
+                        revenue:
+                          type: number
+
+  /admin/compliance-settings:
+    get:
+      summary: Get compliance settings (admin only)
+      tags:
+        - Admin
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  minAge:
+                    type: integer
+                  maxDailyWager:
+                    type: number
+                  maxWeeklyWager:
+                    type: number
+                  maxMonthlyWager:
+                    type: number
+                  selfExclusionPeriods:
+                    type: array
+                    items:
+                      type: integer
+                  restrictedCountries:
+                    type: array
+                    items:
+                      type: string
+
+    put:
+      summary: Update compliance settings (admin only)
+      tags:
+        - Admin
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                minAge:
+                  type: integer
+                maxDailyWager:
+                  type: number
+                maxWeeklyWager:
+                  type: number
+                maxMonthlyWager:
+                  type: number
+                selfExclusionPeriods:
+                  type: array
+                  items:
+                    type: integer
+                restrictedCountries:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Compliance settings updated successfully
+
+  /admin/security-metrics:
+    get:
+      summary: Get security metrics (admin only)
+      tags:
+        - Admin
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  vulnerabilities:
+                    type: object
+                    properties:
+                      high:
+                        type: integer
+                      medium:
+                        type: integer
+                      low:
+                        type: integer
+                  lastAuditDate:
+                    type: string
+                    format: date-time
+                  securityScore:
+                    type: number
+                  failedLoginAttempts:
+                    type: integer
+                  suspiciousActivities:
+                    type: integer

@@ -1,0 +1,10 @@
+{
+  "name": "pllay-enterprise-solution",
+  "version": "1.0.0",
+  "dependencies": {
+    // ... existing dependencies
+    "dd-trace": "^1.0.1",
+    "@datadog/browser-logs": "^4.19.1"
+  },
+  // ... rest of the file remains the same
+}

@@ -1,0 +1,20 @@
+/* Keyboard focus styles */
+body:not(.user-is-tabbing) *:focus {
+  outline: none !important;
+}
+
+body.user-is-tabbing *:focus {
+  outline: 2px solid #4299e1 !important; /* Tailwind blue-500 */
+  outline-offset: 2px !important;
+}
+
+/* Skip link styles */
+.sr-only.focus\:not-sr-only:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: absolute;
+  white-space: normal;
+  width: auto;
+}

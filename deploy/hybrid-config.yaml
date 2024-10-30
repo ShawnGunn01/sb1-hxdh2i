@@ -1,0 +1,90 @@
+# PLLAY Enterprise Solution Hybrid Deployment Configuration
+
+---
+# On-Premises Components
+on_premises:
+  database:
+    type: mongodb
+    version: "5.0"
+    replicas: 3
+    storage: 1000Gi
+  
+  game_servers:
+    instances: 5
+    cpu: 8
+    memory: 32Gi
+  
+  cache:
+    type: redis
+    version: "6.2"
+    replicas: 3
+  
+  security:
+    firewall: pfsense
+    ips: snort
+    hsm: safenet
+
+# Cloud Components (Example using AWS)
+cloud:
+  provider: aws
+  region: us-west-2
+  
+  cdn:
+    type: cloudfront
+    distribution_id: E2QWRUHAPOMQZL
+  
+  compute:
+    type: ec2
+    instance_type: t3.large
+    min_instances: 3
+    max_instances: 10
+  
+  kubernetes:
+    version: "1.21"
+    node_groups:
+      - name: general
+        instance_type: t3.large
+        min_size: 3
+        max_size: 10
+  
+  storage:
+    type: s3
+    bucket: pllay-enterprise-storage
+  
+  analytics:
+    type: redshift
+    nodes: 3
+    node_type: dc2.large
+  
+  monitoring:
+    type: cloudwatch
+  
+  iam:
+    service: aws-iam
+
+# Networking
+networking:
+  vpn:
+    type: aws-vpn
+    on_premises_gateway: 203.0.113.1
+  
+  load_balancer:
+    type: application
+    ssl_cert: arn:aws:acm:us-west-2:123456789012:certificate/12345678-1234-1234-1234-123456789012
+
+# CI/CD
+cicd:
+  service: jenkins
+  on_premises_agents: 2
+  cloud_agents: 3
+
+# Compliance
+compliance:
+  data_residency:
+    sensitive_data: on_premises
+    logs: cloud
+  encryption:
+    at_rest: true
+    in_transit: true
+  audit:
+    service: aws-cloudtrail

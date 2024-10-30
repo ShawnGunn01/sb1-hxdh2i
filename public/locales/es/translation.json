@@ -1,0 +1,70 @@
+{
+  "common": {
+    "welcome": "Bienvenido a PLLAY Enterprise Solution",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar sesión",
+    "dashboard": "Panel de control",
+    "games": "Juegos",
+    "users": "Usuarios",
+    "payments": "Pagos",
+    "analytics": "Análisis",
+    "tournaments": "Torneos",
+    "profile": "Perfil",
+    "settings": "Configuración"
+  },
+  "login": {
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": "Iniciar sesión",
+    "noAccount": "¿No tienes una cuenta? Regístrate aquí",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "twoFactorCode": "Código de autenticación de dos factores"
+  },
+  "register": {
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": "Registrarse",
+    "haveAccount": "¿Ya tienes una cuenta? Inicia sesión aquí"
+  },
+  "dashboard": {
+    "activeUsers": "Usuarios activos",
+    "revenue": "Ingresos",
+    "activeTournaments": "Torneos activos",
+    "userEngagement": "Participación de usuarios",
+    "quickActions": "Acciones rápidas",
+    "createTournament": "Crear torneo",
+    "addNewGame": "Añadir nuevo juego",
+    "viewReports": "Ver informes",
+    "manageUsers": "Gestionar usuarios",
+    "recentActivity": "Actividad reciente"
+  },
+  "wallet": {
+    "title": "Tu Cartera",
+    "balance": "Saldo",
+    "tokenBalance": "Saldo de tokens",
+    "convert": "Convertir",
+    "amount": "Cantidad",
+    "conversionType": "Tipo de conversión",
+    "toTokens": "A Tokens",
+    "toCurrency": "A Moneda"
+  },
+  "responsibleGaming": {
+    "title": "Juego Responsable",
+    "selfExclusion": "Auto-exclusión",
+    "spendingLimits": "Límites de gasto",
+    "setDailyLimit": "Establecer límite diario",
+    "setWeeklyLimit": "Establecer límite semanal",
+    "setMonthlyLimit": "Establecer límite mensual",
+    "excludeFor": "Excluir por",
+    "days": "días",
+    "submit": "Enviar",
+    "limitSet": "Límite establecido con éxito",
+    "exclusionSet": "Auto-exclusión establecida con éxito"
+  },
+  "errors": {
+    "somethingWentWrong": "Ups, algo salió mal.",
+    "tryAgain": "Intentar de nuevo"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "common": {
+    "welcome": "Welcome to PLLAY Enterprise Solution",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "games": "Games",
+    "users": "Users",
+    "payments": "Payments",
+    "analytics": "Analytics",
+    "tournaments": "Tournaments",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "login": {
+    "email": "Email address",
+    "password": "Password",
+    "submit": "Sign in",
+    "noAccount": "Don't have an account? Register here",
+    "forgotPassword": "Forgot password?",
+    "twoFactorCode": "Two-factor authentication code"
+  },
+  "register": {
+    "name": "Name",
+    "email": "Email address",
+    "password": "Password",
+    "submit": "Register",
+    "haveAccount": "Already have an account? Login here"
+  },
+  "dashboard": {
+    "activeUsers": "Active Users",
+    "revenue": "Revenue",
+    "activeTournaments": "Active Tournaments",
+    "userEngagement": "User Engagement",
+    "quickActions": "Quick Actions",
+    "createTournament": "Create Tournament",
+    "addNewGame": "Add New Game",
+    "viewReports": "View Reports",
+    "manageUsers": "Manage Users",
+    "recentActivity": "Recent Activity"
+  },
+  "wallet": {
+    "title": "Your Wallet",
+    "balance": "Balance",
+    "tokenBalance": "Token Balance",
+    "convert": "Convert",
+    "amount": "Amount",
+    "conversionType": "Conversion Type",
+    "toTokens": "To Tokens",
+    "toCurrency": "To Currency"
+  },
+  "responsibleGaming": {
+    "title": "Responsible Gaming",
+    "selfExclusion": "Self-Exclusion",
+    "spendingLimits": "Spending Limits",
+    "setDailyLimit": "Set Daily Limit",
+    "setWeeklyLimit": "Set Weekly Limit",
+    "setMonthlyLimit": "Set Monthly Limit",
+    "excludeFor": "Exclude for",
+    "days": "days",
+    "submit": "Submit",
+    "limitSet": "Limit set successfully",
+    "exclusionSet": "Self-exclusion set successfully"
+  },
+  "errors": {
+    "somethingWentWrong": "Oops, something went wrong.",
+    "tryAgain": "Try again"
+  }
+}
